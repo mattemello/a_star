@@ -7,15 +7,13 @@ import (
 
 func TestPiorityQueue(t *testing.T) {
 	var prir = CreatePriorityQueue(4, nil)
-	prir.insert(5)
-	prir.insert(3)
-	prir.insert(4)
+	prir = prir.insert(5)
+	prir = prir.insert(3)
+	prir = prir.insert(4)
 
 	if prir == nil {
 		t.Errorf("it sucks")
 	}
-
-	fmt.Println(prir.value)
 
 	var Wanted = []int{3, 4, 4, 5}
 
