@@ -52,9 +52,24 @@ function A_Star(start, goal, h)
     return failure
 */
 
-// func A_star(start *Tree, goal int, hFunction h) int {
-//
-// }
+// warn: maybe you have to return the path
+func A_star(start *Tree, goal int, hFunction h) int {
+	openSet := CreatePriorityQueue(hFunction(start), start, nil)
+
+	var gScore map[*Tree]int
+	gScore[start] = 0
+
+	var current PriorityQueue
+
+	for openSet != nil {
+		current, openSet = openSet.pop()
+		if current.tree.value == goal {
+			return 0
+		}
+	}
+
+	return 0
+}
 
 func main() {
 

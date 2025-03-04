@@ -12,24 +12,30 @@ type Edge struct {
 	value int
 }
 
-type h func(Tree) int
+type h func(*Tree) int
 
 type PriorityQueue struct {
 	value int
+	tree  *Tree
 	next  *PriorityQueue
 }
 
-func CreatePriorityQueue(v int, n *PriorityQueue) *PriorityQueue {
+func CreatePriorityQueue(v int, tree *Tree, n *PriorityQueue) *PriorityQueue {
 	return &PriorityQueue{
 		value: v,
+		tree:  tree,
 		next:  n,
 	}
 }
 
-func (x *PriorityQueue) insert(v int) *PriorityQueue {
+func (x *PriorityQueue) pop() (PriorityQueue, *PriorityQueue) {
+	return *x, x.next
+}
+
+func (x *PriorityQueue) insert(v int, tree *Tree) *PriorityQueue {
 
 	if x.value > v {
-		var try = CreatePriorityQueue(v, x)
+		var try = CreatePriorityQueue(v, tree, x)
 		x = try
 		return x
 	}
@@ -38,7 +44,7 @@ func (x *PriorityQueue) insert(v int) *PriorityQueue {
 
 	for x.next != nil {
 		if x.next.value >= v {
-			var try = CreatePriorityQueue(v, x.next)
+			var try = CreatePriorityQueue(v, tree, x.next)
 			x.next = try
 			return start
 		}
@@ -47,11 +53,11 @@ func (x *PriorityQueue) insert(v int) *PriorityQueue {
 	}
 
 	if x.value > v {
-		var try = CreatePriorityQueue(v, x)
+		var try = CreatePriorityQueue(v, tree, x)
 		x.next = try
 		return start
 	} else {
-		var try = CreatePriorityQueue(v, nil)
+		var try = CreatePriorityQueue(v, tree, nil)
 		x.next = try
 		return start
 	}
