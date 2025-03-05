@@ -1,5 +1,7 @@
 package main
 
+import "errors"
+
 /*
 function reconstruct_path(cameFrom, current)
     total_path := {current}
@@ -52,23 +54,43 @@ function A_Star(start, goal, h)
     return failure
 */
 
+func createReturn(cameFrom map[*Tree]*Tree, current PriorityQueue) *Queue {
+	var queue = CreateQueue(current.tree, 0, nil)
+	return nil
+}
+
 // warn: maybe you have to return the path
-func A_star(start *Tree, goal int, hFunction h) int {
+func A_star(start *Tree, goal string, hFunction h) (Queue, error) {
 	openSet := CreatePriorityQueue(hFunction(start), start, nil)
 
 	var gScore map[*Tree]int
 	gScore[start] = 0
+
+	var cameFrom map[*Tree]*Tree
 
 	var current PriorityQueue
 
 	for openSet != nil {
 		current, openSet = openSet.pop()
 		if current.tree.value == goal {
-			return 0
+			return *createReturn(cameFrom, current), nil
 		}
+
+		subTree := current.tree.next
+		neighbors := *current.tree.neighbors
+		for i, elem := range *subTree {
+			tentative_gScore := gScore[current.tree] + neighbors[i].value
+
+			if tentative_gScore < gScore[&elem] {
+				cameFrom[&elem] = current.tree
+				gScore[&elem] = tentative_gScore
+				openSet = openSet.searchPriorityQueue(tentative_gScore+hFunction(&elem), &elem)
+			}
+		}
+
 	}
 
-	return 0
+	return Queue{}, errors.New("Goal not founded")
 }
 
 func main() {

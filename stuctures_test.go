@@ -6,10 +6,10 @@ import (
 )
 
 func TestPiorityQueue(t *testing.T) {
-	var prir = CreatePriorityQueue(4, nil)
-	prir = prir.insert(5)
-	prir = prir.insert(3)
-	prir = prir.insert(4)
+	var prir = CreatePriorityQueue(4, &Tree{value: "str"}, nil)
+	prir = prir.insert(5, &Tree{value: "a"})
+	prir = prir.insert(3, &Tree{value: "b"})
+	prir = prir.insert(4, &Tree{value: "c"})
 
 	if prir == nil {
 		t.Errorf("it sucks")
@@ -23,6 +23,24 @@ func TestPiorityQueue(t *testing.T) {
 		}
 
 		prir = prir.next
+	}
+
+	var pque = CreatePriorityQueue(4, &Tree{value: "str"}, nil)
+	pque = pque.insert(5, &Tree{value: "a"})
+	pque = pque.insert(3, &Tree{value: "b"})
+	pque = pque.insert(4, &Tree{value: "c"})
+
+	pque = pque.searchPriorityQueue(2, &Tree{value: "b"})
+	var WantedSearch = []string{"b", "c", "str", "a"}
+
+	for i, _ := range WantedSearch {
+		if WantedSearch[i] != pque.tree.value {
+			t.Errorf("It's not working wanted %s, recived %s", WantedSearch[i], pque.tree.value)
+		}
+
+		fmt.Println(pque.tree.value, pque)
+
+		pque = pque.next
 	}
 
 	fmt.Println("All good!")
