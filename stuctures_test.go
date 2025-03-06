@@ -38,10 +38,32 @@ func TestPiorityQueue(t *testing.T) {
 			t.Errorf("It's not working wanted %s, recived %s", WantedSearch[i], pque.tree.value)
 		}
 
-		fmt.Println(pque.tree.value, pque)
-
 		pque = pque.next
 	}
 
 	fmt.Println("All good!")
+}
+
+func TestTree(t *testing.T) {
+	var tree = CreateTree("a")
+	tree.Insert("b", 1)
+	tree.son["b"].nextTree.Insert("c", 1)
+
+	tt := tree
+
+	var Wanted = []string{"a", "b", "c"}
+
+	for i, w := range Wanted {
+
+		if w != tt.value {
+			t.Errorf("It's not working the tree wanted %s, recived %s", w, tt.value)
+		}
+
+		letter, err := tt.takeFirstKey()
+		if err != nil && i != len(Wanted)-1 {
+			t.Errorf("The tree does not have child")
+		} else if i != len(Wanted)-1 {
+			tt = tt.son[letter].nextTree
+		}
+	}
 }

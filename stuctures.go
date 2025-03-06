@@ -1,18 +1,42 @@
 package main
 
+import "errors"
+
+// warn: this is all to reedo
 type Tree struct {
-	value     string
-	neighbors *[]Edge
-	next      *[]Tree
+	value string
+	son   map[string]*Next
 }
 
-type Edge struct {
-	node  *Tree
-	node2 *Tree
-	value int
+type Next struct {
+	valueMove int
+	nextTree  *Tree
 }
 
-type h func(*Tree) int
+func (n Tree) takeFirstKey() (string, error) {
+	for m := range n.son {
+		return m, nil
+	}
+
+	return "", errors.New("No element in the map")
+}
+
+func CreateTree(value string) *Tree {
+	return &Tree{
+		value: value,
+		son:   make(map[string]*Next),
+	}
+}
+
+func (tr *Tree) Insert(value string, moveCost int) {
+	var nextTree = CreateTree(value)
+	tr.son[value] = &Next{
+		valueMove: moveCost,
+		nextTree:  nextTree,
+	}
+}
+
+type estimation func(*Tree) int
 
 type Queue struct {
 	node  *Tree
